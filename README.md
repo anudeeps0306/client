@@ -1,70 +1,81 @@
-# Getting Started with Create React App
+# URL Shortener Client
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This React application is a client-side interface for a URL shortening service. It allows users to create, view, and manage shortened URLs, as well as view analytics.
 
-## Available Scripts
+## Installation
 
-In the project directory, you can run:
+1.  **Clone the repository:**
 
-### `npm start`
+    ```bash
+    git clone https://github.com/anudeeps0306/client
+    cd client
+    ```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2.  **Install dependencies:**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+    ```bash
+    npm install
+    ```
 
-### `npm test`
+3.  **Set up environment variables:**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    * Create a `.env.local` file in the root directory.
+    * Add the following variable, adjusting the URL if necessary:
 
-### `npm run build`
+        ```
+        REACT_APP_API_URL=http://localhost:5000 
+        ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+        (This should be the URL of your backend server)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+4.  **Run the application:**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    ```bash
+    npm start
+    ```
 
-### `npm run eject`
+    The app will be accessible at `http://localhost:3000` in development mode.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Routes
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The application uses React Router for navigation and defines the following routes:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+* `/` :
+    * If the user is **not authenticated**, this displays the `Login` component, allowing them to sign in [cite: client/src/App.js, client/src/components/auth/Login.js].
+    * If the user **is authenticated**, this redirects them to the `/dashboard` [cite: client/src/App.js].
+* `/dashboard` :
+    * Displays the `Dashboard` component, showing the user's shortened URLs, search functionality, and a link to create new URLs [cite: client/src/App.js, client/src/components/dashboard/Dashboard.js].
+    * Accessible only to authenticated users.
+* `/create` :
+    * Displays the `UrlForm` component, allowing users to create a new shortened URL [cite: client/src/App.js, client/src/components/url/UrlForm.js].
+    * Accessible only to authenticated users.
+* `/url/:id` :
+    * Displays the `UrlDetail` component, showing analytics for a specific URL (e.g., clicks over time, device/browser breakdown) [cite: client/src/App.js, client/src/components/url/UrlDetail.js].
+    * `id` is a parameter representing the unique identifier of the URL.
+    * Accessible only to authenticated users.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Authentication
 
-## Learn More
+* The application uses JWT (JSON Web Tokens) for authentication.
+* After successful login, the token is stored in `localStorage` and included in the `x-auth-token` header for subsequent requests [cite: client/src/utils/setAuthToken.js, client/src/redux/authSlice.js].
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Redux
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* Redux is used for state management.
+* The Redux store is configured in `src/redux/store.js` [cite: client/src/redux/store.js].
+* Authentication-related state is managed in `src/redux/authSlice.js` [cite: client/src/redux/authSlice.js].
+* URL-related state (URLs, analytics) is managed in `src/redux/urlSlice.js` [cite: client/src/redux/urlSlice.js].
 
-### Code Splitting
+## Key Components
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+* `Login.js`:  Handles user login.
+* `Dashboard.js`:  Displays the main dashboard with the list of URLs.
+* `UrlForm.js`:  Provides a form to create new URLs.
+* `UrlDetail.js`:  Displays detailed analytics for a specific URL.
+* `Navbar.js`:  The application's navigation bar.
+* `setAuthToken.js`:  A utility to set/clear the JWT in the Axios request headers.
 
-### Analyzing the Bundle Size
+## Notes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+* This client-side application relies on a separate backend server to handle API requests, user authentication, and URL redirection.
+* Styling is implemented using Tailwind CSS.
